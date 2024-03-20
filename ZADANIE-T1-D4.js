@@ -62,9 +62,9 @@ const POZIOM_TRUDNOSCI = 2; // 1 albo 2 albo 3
 // MIEJSCE NA TWÓJ KOD
 const checkPaszport = (paszport, aktualnyNumerDnia) => {
 	if (
-		paszport.narodowosc === "ROSJA" ||
-		paszport.narodowosc === "BOŚNIA" ||
-		paszport.narodowosc === "WATYKAN" ||
+		["WATYKAN", "ROSJA", "BOŚNIA"].some((blacklistedCountry) =>
+			paszport.narodowosc.includes(blacklistedCountry)
+		) ||
 		paszport.wiek < 18 ||
 		paszport.wygasa <= aktualnyNumerDnia
 	) {
@@ -80,14 +80,15 @@ const checkKartoteka = ({
 	zdjecie,
 	wygasa,
 }) => {
+	let getKartoteka = kartoteka(id);
 	if (
-		kartoteka(id).id !== id ||
-		kartoteka(id).imie !== imie ||
-		kartoteka(id).nazwisko !== nazwisko ||
-		kartoteka(id).narodowosc !== narodowosc ||
-		kartoteka(id).wiek !== wiek ||
-		kartoteka(id).zdjecie !== zdjecie ||
-		kartoteka(id).wygasa !== wygasa
+		getKartoteka.id !== id ||
+		getKartoteka.imie !== imie ||
+		getKartoteka.nazwisko !== nazwisko ||
+		getKartoteka.narodowosc !== narodowosc ||
+		getKartoteka.wiek !== wiek ||
+		getKartoteka.zdjecie !== zdjecie ||
+		getKartoteka.wygasa !== wygasa
 	) {
 		return true;
 	}
@@ -106,8 +107,8 @@ const checkControlSum = ({ id, wygasa, sumaKontrolna }) => {
  * @returns {boolean} wynik kontroli
  */
 function kontrola(aktualnyNumerDnia, paszport) {
-  if (checkPaszport(paszport, aktualnyNumerDnia)) return false;
-  //syzyf jak chuj
+	if (checkPaszport(paszport, aktualnyNumerDnia)) return false;
+	//syzyf jak chuj
 	if (checkKartoteka(paszport)) return areszt();
 	if (checkControlSum(paszport)) return areszt();
 	return true;
