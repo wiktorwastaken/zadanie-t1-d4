@@ -82,20 +82,22 @@ const checkKartoteka = ({
 }) => {
 	let getKartoteka = kartoteka(id);
 	if (
-		getKartoteka.id !== id ||
-		getKartoteka.imie !== imie ||
-		getKartoteka.nazwisko !== nazwisko ||
-		getKartoteka.narodowosc !== narodowosc ||
-		getKartoteka.wiek !== wiek ||
-		getKartoteka.zdjecie !== zdjecie ||
-		getKartoteka.wygasa !== wygasa
+		id === undefined ||
+		getKartoteka === undefined ||
+		id !== getKartoteka.id ||
+		imie !== getKartoteka.imie ||
+		nazwisko !== getKartoteka.nazwisko ||
+		narodowosc !== getKartoteka.narodowosc ||
+		wiek !== getKartoteka.wiek ||
+		zdjecie !== getKartoteka.zdjecie ||
+		wygasa !== getKartoteka.wygasa
 	) {
 		return true;
 	}
 };
 
 const checkControlSum = ({ id, wygasa, sumaKontrolna }) => {
-	if (2137 * id * wygasa != sumaKontrolna) {
+	if (2137 * id * wygasa !== sumaKontrolna) {
 		return true;
 	}
 };
@@ -107,10 +109,15 @@ const checkControlSum = ({ id, wygasa, sumaKontrolna }) => {
  * @returns {boolean} wynik kontroli
  */
 function kontrola(aktualnyNumerDnia, paszport) {
-	if (checkPaszport(paszport, aktualnyNumerDnia)) return false;
-	//syzyf jak chuj
-	if (checkKartoteka(paszport)) return areszt();
-	if (checkControlSum(paszport)) return areszt();
+	if (checkPaszport(paszport, aktualnyNumerDnia)) {
+		return false;
+	}
+	if (checkKartoteka(paszport)) {
+		return areszt();
+	}
+	if (checkControlSum(paszport)) {
+		return areszt();
+	}
 	return true;
 }
 
